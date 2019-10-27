@@ -1,0 +1,156 @@
+*{
+    font-family: sans-serif;
+}
+
+.container{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden ;
+}
+
+.header{
+    background: #343a40;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    height: 60px;
+    border-bottom: 4px solid #9aabbb;;
+}
+
+main{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.leftSection{
+    padding: 5px 10px;
+    min-width: 300px;
+    background-color: #e0e0e0;
+}
+form>div{
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+#cityInput{
+    height: 35px;
+    border: 1px solid rgb(187, 187, 187) ;
+    padding-left: 10px;
+    border-radius: 5px 0px 0px 5px ;
+}
+
+#inputButton{
+    height: 35px;
+    width: 35px;
+    border: none;
+    background-color: #007bff;
+    color:white;
+    border-radius: 0px 5px 5px 0px;
+    cursor: pointer;
+}
+
+
+.searchHistory{
+    border: 1px solid rgb(212, 212, 212);
+    background: white;
+    border-radius: 8px;
+}
+
+.searchHistory>button{
+    border: 1px solid rgb(212, 212, 212);
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    color: gray;
+    cursor: pointer;
+    font-size: 0.99em;
+    background: white;
+}
+
+.searchHistory>button:hover{
+    color: black;
+}
+
+
+.rightSection{
+    margin-top: 15px;
+    margin-left: 20px;
+    margin-bottom: 15px;
+    width: 100%;
+    /* height: 50%; */
+    overflow: scroll;
+}
+
+
+.currentlySearched{
+    padding: 10px;
+    padding-top: 15px;
+    border-top: 1px solid rgb(216, 216, 216);
+    border-bottom: 1px solid rgb(216, 216, 216);
+    border-left: 1px solid rgb(216, 216, 216);
+    margin-bottom: 20px;
+}
+
+.currentlySearched>div>p{
+    font-size: 15px;
+    font-weight: 100;
+    margin: 20px 0;
+}
+
+.oDay>h3{
+    margin-bottom: 5px;
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    background-color: #007bff;
+    border-radius: 4px;
+    max-width: 120px ;
+    min-width: 119px;
+    margin: 5px 10px;
+
+}
+
+.card>strong{
+    margin: 10px 5px;
+}
+
+.card>span{
+    margin: 10px 5px;
+    font-size: 15px;
+    font-weight: 100;
+}
+
+#uv{
+    background: rgb(255, 76, 76);
+    padding:1px 3px;
+    border-radius: 3px;
+}
+
+.fiveDay{
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.cardsFive{
+    display: flex;
+    flex-wrap: wrap;
+    overflow: scroll;
+}
+
+@media only screen and (max-width: 377px) {
+    .leftSection{
+        padding-top: 30px;
+        min-width: 47%;
+    }
+    .rightSection{
+        margin:0;
+    }
+}
