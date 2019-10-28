@@ -1,160 +1,263 @@
-$('#colorPic').on('input', function(){
-    console.log(this.value)
-})
-
-
-$('button').on('click', function(e){
-    e.preventDefault()
-})
-
-// var aa = [
-    // {"data":{"currentCity":{"name":"Toronto","temp":281.58,"humid":70,"windSpeed":4.1,"lon":-79.39,"lat":43.65,"UV":2.78,"fiveDay":[[{"temp":282.67,"temp_min":281.92,"temp_max":282.67,"pressure":1024,"sea_level":1024,"grnd_level":1014,"humidity":60,"temp_kf":0.75},{"id":804,"main":"Clouds","description":"overcast clouds","icon":"04d"}],[{"temp":287.5,"temp_min":287.5,"temp_max":287.5,"pressure":1001,"sea_level":1001,"grnd_level":991,"humidity":81,"temp_kf":0},{"id":500,"main":"Rain","description":"light rain","icon":"10d"}],[{"temp":284.16,"temp_min":284.16,"temp_max":284.16,"pressure":1020,"sea_level":1020,"grnd_level":1010,"humidity":60,"temp_kf":0},{"id":800,"main":"Clear","description":"clear sky","icon":"01d"}],[{"temp":287.03,"temp_min":287.03,"temp_max":287.03,"pressure":1015,"sea_level":1015,"grnd_level":1006,"humidity":83,"temp_kf":0},{"id":800,"main":"Clear","description":"clear sky","icon":"01d"}],[{"temp":280.78,"temp_min":280.78,"temp_max":280.78,"pressure":1029,"sea_level":1029,"grnd_level":1019,"humidity":59,"temp_kf":0},{"id":803,"main":"Clouds","description":"broken clouds","icon":"04d"}]]},"searchHistory":[]}}
-// ] ;
-
 var model = {
-    data: {
-        currentCity: {
-            name: '',
-            dt:'',
-            temp: '',
-            humid: '',
-            windSpeed: '',
-            lon:'',
-            lat:'',
-            UV: '',
-            fiveDay:''
-        },
+    data:{
+        currentCity: ''
     },
-    init:function(){
-        // if there is data in local storage, then u dont need to do anythin
-        if (localStorage.searchHistory){
-            return '!';
+    init:async function (){
+        let time = new Date();
+        this.today = time.getDate()+'/'+time.getMonth()+'/'+time.getFullYear()
+        let goodData=[]
+        if (localStorage.searchHistory){ // if there is data in local storage, make sure its up-to-date
+            let history = await this.history('get')
+            for (city in history){
+                if (history[city].date === this.today){
+                    goodData.push(true)
+                }else{
+                    goodData.push(false);
+                }
+            }
+            if (goodData.includes(false)){ //if not up-to-date, then update it
+                await this.history('delete')
+                await this.call('toronto')
+            } else {
+                return '!' // if its up-to-date, then dont need to do anything
+            }
         } else{
-            //else, if there is no data, call for it using ajax, and then build local storage data
-            this.call('toronto')
+            await this.call('toronto') //else, if there is no data, call for it using ajax, and then build local storage data
         }
     },
-    // updateCurrentCity:function(){
-    //                 // ????? do i need this function
-    // },
-    call:function(city){ 
-        // if in local storage, render visual from localstorage,
-        // else do api call, grab data, save data in local storage, render view, render seaerch history
-        const apiKey ='39de57d592095bbfe9e8021be543027b';
-        let urlCity = `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${apiKey}`;
-        let fiveDay = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=${apiKey}`;
-        let dt = new Date();
-        function ajax1(d){
-            $.ajax({method:"GET",url:urlCity,success:function(e){
-                model.data.currentCity.dt = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()
-                model.data.currentCity.name = e.name;
-                model.data.currentCity.temp = e.main.temp;
-                model.data.currentCity.humid = e.main.humidity;
-                model.data.currentCity.windSpeed = e.wind.speed;
-                model.data.currentCity.lon = e.coord.lon;
-                model.data.currentCity.lat = e.coord.lat;
-                let urlUV =  `http://api.openweathermap.org/data/2.5/uvi/forecast?appid=${apiKey}&lat=${e.coord.lat}&lon=${e.coord.lon}&cnt=1`
-                $.ajax({method:"GET",url:urlUV,success:function(e){
-                    model.data.currentCity.UV = e[0].value
-                }})
-            }})
+    call:async function(city){ 
+        city = city.toLowerCase()
+        if (city.includes(' ')){
+            city.replace(' ','+')
         }
-        
-        function ajax2(){
-            $.ajax({method:"GET",url:fiveDay,success:function(e){
-                console.log(e)
-                model.data.currentCity.fiveDay = [[e.list[0]], [e.list[8]], [e.list[16]], [e.list[24]],[e.list[32]]];
-            }});
+        try{
+            // grab data through api call, save data in local storage, and update current city
+            const apiKey ='9710213fc0f3cccc6f013963f9a76866';
+            let urlCity = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=${apiKey}`;
+            let fiveDay = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=${apiKey}`;
+            let cityData = await fetch(urlCity)
+            cityData = await cityData.json(); //!!!!!!!!!!!!!!! this is the searched city data
+            let urlUV = `http://api.openweathermap.org/data/2.5/uvi/forecast?appid=${apiKey}&lat=${cityData.coord.lat}&lon=${cityData.coord.lon}&cnt=1`
+            let uvData = await fetch(urlUV);
+            uvData = await uvData.json();
+            uvData = uvData[0] // !!!!!!!!!!!!! this is the uv index for the current city
+            let fiveDayData = await fetch(fiveDay); 
+            fiveDayData = await fiveDayData.json()
+            // below is the 5 day data
+            fiveDayData = [[fiveDayData.list[0]], [fiveDayData.list[8]], [fiveDayData.list[16]], [fiveDayData.list[24]],[fiveDayData.list[32]]];
+            //update current city, update localStorage.searchHistory,
+            await this.upddateCurrentCity(cityData),
+            await this.updateLocalStorage(cityData,uvData,fiveDayData)
         }
-
-        $.when(ajax1(dt),ajax2()).done(function(){setTimeout(()=>{model.updateSearchHistory('init')},1000)});
+        catch(err){
+            return (['Please Check The City Name Which Was Entered',false])
+        }
+       
     },
-    updateSearchHistory:function(x){
-        //if there is no local storage build it
-        if (x==='init'){
-            localStorage.searchHistory = JSON.stringify([model.data.currentCity])
-        } else{
-            // else, just update it
-            let objs = JSON.parse(localStorage.searchHistory)
-            objs.push(model.data.currentCity);
-            localStorage.searchHistory =  JSON.stringify(objs)
-        };
+    upddateCurrentCity: async function(city){
+        model.data.currentCity = city.name
     },
-    get:function(x){
+    updateLocalStorage:async function(cityData,uvData,fiveDayData){
+        let d = new Date();
+        let dataObj = { //construct the new data set for the newly searched city
+            name:cityData.name,
+            date:d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear(),
+            dataCity:cityData,
+            dataUV:uvData,
+            dataFiveDay:fiveDayData,
+        }
+        if (!localStorage.searchHistory){ // create search history if non existant
+            // await this.history('set',[dataObj])
+            localStorage.searchHistory=JSON.stringify([dataObj])
+        } else{ //else, just add and update it
+            let data = JSON.parse(localStorage.searchHistory);
+            data.unshift(dataObj)
+            localStorage.searchHistory=JSON.stringify(data)
+        }
+    },
+    get:async function(x){
         if ((x==='history') && (localStorage.searchHistory) ){
-            return JSON.parse(localStorage.searchHistory)
-        } else if ((x==='history') && (!localStorage.searchHistory)){
-            var x;
-            $.when(model.call('toronto')).done(function(){ x = model.data.currentCity});
-            return x
-        }                                  
-
-        if (x === 'current'){
-            return model.data.currentCity;
+            return await JSON.parse(localStorage.searchHistory)
+        }  else if (x === 'current'){
+            return await model.data.currentCity
+        } else {
+            let history = await this.history('get')
+            for (i in history){
+                if (history[i].name.toLowerCase() === x.toLowerCase()){
+                    return history[i]
+                }
+            }
         }
-    }
+    },
+    findCityData:async function(city){
+        if (await this.isInSearchHistory(city)){ //if city is alredy in history, send it back to be rendered
+            let data = await this.get(city)
+            return [data,true]
+        } else{
+            let data = await this.call(city);
+            return data
+        }
+    //     let serchHistory = JSON.parse(localStorage.searchHistory);
+    //     for (city in serchHistory){
+    //         if (serchHistory[city].name.toLowerCase() === x.toLowerCase()){
+    //             console.log(serchHistory[city])
+    //         }else{
+    //             this.call(x)
+    //             setTimeout(()=>{model.updateSearchHistory('!')},1000);
+    //         }
+        // }
+    },
+    isInSearchHistory:async function(city){
+        let history = await this.history('get')
+        for ( i in history){
+            if (history[i].name.toLowerCase() == city.toLowerCase()){
+                return true
+            }
+        } // if name not in history, return false
+    },
+    history:async function(x){
+        if (x==='get'){
+            return await JSON.parse(localStorage.searchHistory)
+        } else if (x==='delet'){
+            await localStorage.clear()
+        } 
+    },
 }
 
 var x = {
-    init:function(){
-        let x = model.init()
-        if (x==='!'){
-            view.init()
-        }else(
-            setTimeout(()=>{view.init()},2000)
-        )
+    init: async function(){
+        await model.init()
+        await view.init()
     },
-    get:function(x){
+    get:async function(x){
         if (x === 'history'){
-            return model.get('history')
+            return await model.get('history')
         } else if (x === 'current'){
-            return model.get('current')
+            return await model.get('current')
         }
+    },
+    getCityData:async function(city){
+        return await model.findCityData(city);
     }
 };
 
 var view = {
-    init:function(){
+    init:async function(){
+        this.cityInput =$('#cityInput');
+        $('#inputButton').on('click',this.searchForTheCity);
+        $('.searchHistory').on('click','button',this.searchForTheCity);
+        this.header = $('.header');
+        this.bar = $('.leftSection');
+        this.header.on('click',this.toggle);
         this.searchHistory = $('.searchHistory');
-        let historyList = x.get('history')
+        let historyList = await x.get('history')
         for (city in historyList){
-            this.renderHisttory(historyList[city])
+            await this.renderHistory(historyList[city])
         }
-        this.renderDashboard(historyList[0])
+        await this.renderDashboard(historyList[0]);
     },
-    renderHisttory:function(x){
+    renderHistory:async function(x){
         let temp = $('#tempSearchHistory').html();
         temp = temp.replace('{{city}}',x.name);
-        this.searchHistory.append(temp);
+        this.searchHistory.prepend(temp);
     },
-    renderDashboard:function(x){
+    renderDashboard:async function(x){
         let temp = $('#tempCurrent').html()
         temp = temp.replace('{{name}}',x.name);
-        temp = temp.replace('{{date}}',x.dt);
-        // temp = temp.replace('{{logo}}',x.logo);
-        temp = temp.replace('{{temp}}',x.temp);
-        temp = temp.replace('{{humid}}',x.humid);
-        temp = temp.replace('{{wind}}',x.windSpeed);
-        temp = temp.replace('{{uv}}',x.UV);
+        temp = temp.replace('{{date}}',x.date);
+        temp = temp.replace('{{icon}}',x.dataCity.weather[0].icon)
+        temp = temp.replace('{{condition}}',x.dataCity.weather[0].description)
+        temp = temp.replace('{{temp}}',x.dataCity.main.temp);
+        temp = temp.replace('{{humid}}',x.dataCity.main.humidity);
+        temp = temp.replace('{{wind}}',x.dataCity.wind.speed);
+        temp = temp.replace('{{uv}}',x.dataUV.value);
         $('.cards').html(temp)
-        for (i in x.fiveDay){
-            this.renderFiveDay(x.fiveDay[i])
-            console.log(x.fiveDay)
+        $('.cardsFive').html('')
+        // set icon
+        for (i in x.dataFiveDay){
+           await this.renderFiveDay(x.dataFiveDay[i][0])
         }
     },
-    renderFiveDay:function(x){
+    renderFiveDay:async function(x){
         let temp = $('#tempFiveDay').html()
-        temp = temp.replace('{{date}}',x[0].dt_txt.substr(0,10))
-        // temp = temp.replace('{{logo}}')
-        temp = temp.replace('{{temp}}',x[0].main.temp)
-        temp = temp.replace('{{humid}}',x[0].main.humidity)
-        $('.cardsFive').append(temp)
+        temp = temp.replace('{{date}}',x.dt_txt.substr(0,10))
+        temp = temp.replace('{{icon}}',x.weather[0].icon)
+        temp = temp.replace('{{temp}}',x.main.temp)
+        temp = temp.replace('{{humid}}',x.main.humidity)
+        $('.cardsFive').prepend(temp)
+    },
+    searchForTheCity:async function(e){ //look for the searched city
+        let cityData;
+        if (e.target.classList.contains('searched')){ // if clicked on search History, just render from history
+        //get the city dta and then render acordingly
+            cityData = await x.getCityData(this.innerText);
+            if (cityData[0].name.toLowerCase() === $('#city').text().toLowerCase()){
+                return
+            }
+        }else{ // if input from search bar, and if its not empty, and if its not already loaded:
+            e.preventDefault()
+            if (view.cityInput.val() && (view.cityInput.val().trim() !== '' ) && (view.cityInput.val().toLowerCase() !== $('#city').text().toLowerCase()) ){
+                debugger
+                cityData = await x.getCityData(view.cityInput.val());
+            }
+        }
+        
+        
+        if (cityData === undefined){
+            await view.renderDashboard( await x.getCityData(x.get('current')) )
+        } else if (cityData[1] === true){
+            await view.renderDashboard( await cityData[0])
+        }
+
     }
 }
 
+
+        
+
+        
+        
+    //         //get the city dta and then render acordingly
+    
+    //         console.log(cityData)
+    //     }else{
+    //         e.preventDefault()
+    //         return;
+    //     }   
+    // }
+    // if(cityData===false){
+    //     console.log('SHHHHEEIIIT')
+    // }else if (cityData === undefined) {
+    //     // view.renderDashboard()
+    // }
+    // }
+    
+    //             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //         if (cityData[0].name.toLowerCase() === $('#city').text().toLowerCase()){
+    //             return
+    //         }
+    //         if (cityData[1] === true){
+    //             await view.renderDashboard(cityData[0]);
+    //             return;
+    //         }
+    //         // $('.searchHistory').html('')
+    //         let historyList = await x.get('history')
+    //         for (city in historyList){
+    //             await view.renderHistory(historyList[city])
+    //         }
+    //     toggle:function(){
+    //         if (window.innerWidth <= 377){
+    //             view.bar.offset().top === 100 ? $('.leftSection').animate({'top': '-'+$('.leftSection').height()}) : $('.leftSection').animate({'top':'0px'})
+    //         }
+    //     },
+    
+
+
+
+
+
+
+
+
+
 x.init();
-
-
-
-
-

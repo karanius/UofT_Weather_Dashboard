@@ -31,8 +31,10 @@
                         </div>
                     </form>
                     <!-- search history -->
-                    <p>Search History:</p>
+                    <div>
+                        <p>Search History:</p>
                     <div class="searchHistory">
+                    </div>
                     </div>
 
                 </div>
@@ -64,11 +66,11 @@
 
     <script id='tempCurrent' type='text/template'>
         <div class="currentlySearched">
-            <h3><span id='city' >{{name}}</span> <span id='date'>({{date}})</span> <span id='logo'>{{logo}}</span></h3>
+            <h3><span id='city' >{{name}}</span> <span id='date'>({{date}})</span><img width='80px' src="http://openweathermap.org/img/wn/{{icon}}@2x.png" alt="weather" id='logo' ><span id='condition'> {{condition}}</span></h3>
             <div>
-                <p>Temperature: <span id='temp'><strong>{{temp}}</span>°F</strong></p>
+                <p>Temperature: <span id='temp'><strong>{{temp}}</span>°C</strong></p>
                 <p>Humidity: <span id='humid'><strong>{{humid}}</span>%</strong></p>
-                <p>Wind Speed: <span id='wind'><strong>{{wind}}</span>MPH</strong></p>
+                <p>Wind Speed: <span id='wind'><strong>{{wind}}</span>KM/H</strong></p>
                 <p>UV Index: <span id='uv'>{{uv}}</span></p>
             </div>
         </div>
@@ -78,8 +80,8 @@
     <script type='text/template' id='tempFiveDay' >
         <div class="card">
             <strong><span data-card='date' >{{date}}</span></strong>
-            <span data-card='logo'>{{logo}}</span>
-            <span>Temp: <span data-card='temp' >{{temp}}</span>°F</span>
+            <span data-card='logo'><img src="http://openweathermap.org/img/wn/{{icon}}@2x.png" alt="weather" id='logo' width='50px' ></span>
+            <span>Temp: <span data-card='temp' >{{temp}}</span>°C</span>
             <span>Humidity: <span data-temp='humid'>{{humid}}</span>%</span>
         </div>
     </script>
@@ -98,21 +100,6 @@
         </button>
     </script>
 
-
-
-
-
-
-
-    <input type="color" id='colorPic'>
-
-
-
-
-
-
-
-    <img src="./img.png" width="100%" alt="">
 
     
     
