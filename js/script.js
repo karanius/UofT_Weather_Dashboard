@@ -1,9 +1,8 @@
 $('#clicky').on('click',function(e){
     e.preventDefault();
-    $('#x').text('W: '+$(window).width()+' H: '+$(window).height())
+    $('#x').text('W: '+$(window).width()+' H: '+$(window).height()+' Browser: '+ JSON.stringify($.browser) )
 })
 $(window).on('click',function(e){
-    aaaa = e.target
     $(e.target).css({'filter':'invert('+ 1 +')'})
     setTimeout( ()=>{$(e.target).css({'filter':'invert('+ 0+')'}) },600)
 })
