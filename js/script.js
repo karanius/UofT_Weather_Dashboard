@@ -230,8 +230,6 @@ var view = {
             $(window).on('click', function(e){
                 if( (e.originalEvent.clientY > (view.bar.offset().top + view.bar.height() + 25)) && (view.bar.offset().top === 100) ){
                     view.toggle()
-                    aaa === 1 ? aaa = 0 : aaa = 1;
-                    $('.header').css({'filter':'invert('+aaa+')'})
                 }
             })
             view.header.click(view.toggle);
