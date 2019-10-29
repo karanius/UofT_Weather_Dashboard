@@ -239,7 +239,7 @@ var view = {
             // })
             view.header.click(view.toggle);
         }else{
-            view.header.unbind('click',view.toggle)
+            // view.header.unbind('click',view.toggle)
         }
     },
     toggle:async function(){
