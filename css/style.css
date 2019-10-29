@@ -22,6 +22,7 @@ img{
     padding: 10px;
     margin-left: 20px; 
     border-radius: 5px;
+    pointer-events: none;
 }
 
 
@@ -35,6 +36,7 @@ img{
     border-bottom: 10px solid transparent; 
     border-right:20px solid  rgb(255, 68, 68); 
     color:white;
+    pointer-events: none;
 }
 
 
@@ -218,7 +220,6 @@ form>div{
     .searchHistory{
         margin-top: 10px;
         margin-bottom: 10px;
-        box-shadow: 0px 0px 5px 5px rgb(204, 204, 204);
     }
     .header{
         z-index: 2;
@@ -233,15 +234,16 @@ form>div{
         content: 'III';
         top:60px;
         transform: rotate(90deg);
+        pointer-events: none;
     }
     .leftSection{
         position: absolute;
         width: 100%;
         z-index: 1;
         top: 0px;
-        border-bottom: 5px solid rgb(153, 153, 153);
-        border-left: 5px solid rgb(107, 107, 107);
-        border-right: 5px solid rgb(107, 107, 107);
+        border-bottom: 3px solid rgb(153, 153, 153);
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
         box-shadow: 5px 0px 5px 5px rgb(189, 189, 189);
     }
     .currentlySearched{
@@ -261,6 +263,7 @@ form>div{
         border-bottom: 12px solid transparent; 
         border-right:20px solid  rgb(255, 68, 68); 
         color:white;
+        pointer-events: none;
     }
     img{
         transform: scale(1.5);
