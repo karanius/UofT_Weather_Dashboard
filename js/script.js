@@ -1,9 +1,3 @@
-var aaa = 0
-$('.header').on('click',function(){
-    aaa === 1 ? aaa = 0 : aaa = 1;
-    $('.header').css({'filter':'invert('+aaa+')'})
-})
-
 var model = {
     data:{
         currentCity: ''

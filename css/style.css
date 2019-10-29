@@ -1,10 +1,10 @@
 *{
     font-family: sans-serif;
-}
+} 
 
 body{
-    height: 100vh;
-    widows: 100vw;
+    /* height: 100vh; */
+    /* widows: 100vw; */
 }
 img{
     filter:invert(0.10)
