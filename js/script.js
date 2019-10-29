@@ -1,8 +1,3 @@
-$('#click').on('click',function(e){
-    e.preventDefault()
-    $('#put').html($(window).width())
-})
-
 var model = {
     data:{
         currentCity: ''
@@ -108,7 +103,7 @@ var model = {
     history:async function(x,obj){
         if (x==='get'){
             return await JSON.parse(localStorage.searchHistory)
-        } else if (x==='delet'){
+        } else if (x==='delete'){
             await localStorage.clear()
         } else if (x === 'set'){
             localStorage.searchHistory=JSON.stringify(obj)
@@ -133,10 +128,15 @@ var x = {
     },
     getCityData:async function(city){
         return await model.findCityData(city);
+    },
+    clearSearch: async function(){
+        await model.history('delete')
     }
 };
+// location.reload()
 var view = {
     init:async function(){
+        // $('#clear').on('click',function(){ })
         this.tooltip = $('.err')
         $(window).on('resize', this.adjust)
         this.cityInput =$('#cityInput');
@@ -185,12 +185,14 @@ var view = {
     renderError:async function(err){
         console.log(404,err)
         this.tooltip.animate({'opacity':1})
-        setTimeout(()=>{view.tooltip.animate({'opacity':0})},2000)
-
+        setTimeout(()=>{view.tooltip.animate({'opacity':0})},3000);
     },
     searchForTheCity:async function(e){ //look for the searched city
         let cityData;
-        if (e.target.classList.contains('searched')){ // if clicked on search History, just render from history
+        if(e.target.id === 'clear'){
+            await x.clearSearch();
+            location.reload()
+        } else if (e.target.classList.contains('searched')){ // if clicked on search History, just render from history
         //get the city dta and then render acordingly
             cityData = await x.getCityData(this.innerText);
             if (cityData[0].name.toLowerCase() === $('#city').text().toLowerCase()){
@@ -210,6 +212,7 @@ var view = {
             cityData = await x.getCityData(cityData)
             await view.renderDashboard( await cityData[0])
             await view.renderHistory( await cityData[0])
+            $('#cityInput').val('')
             await view.toggle();
         } else if (cityData[1] === true){
             await view.renderDashboard( await cityData[0])
@@ -221,7 +224,8 @@ var view = {
     adjust:async function(){
         if ( $(window).width() < 500){
             view.bar.animate({'top': -(view.bar.height()+15) })
-            $('.darkner').css({'opacity':0})
+            $('.darkner').css({'opacity':0});
+            $('.darkner').css({'height' : $(window).height() + 200 +'px'})
             $(window).on('click', function(e){
                 if( (e.originalEvent.clientY > (view.bar.offset().top + view.bar.height() + 25)) && (view.bar.offset().top === 100) ){
                     view.toggle()
