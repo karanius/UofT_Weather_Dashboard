@@ -4,7 +4,7 @@
 
 body{
     /* height: 100vh; */
-    /* widows: 100vw; */
+    widows: 100vw;
 }
 img{
     filter:invert(0.10)
@@ -244,7 +244,6 @@ form>div{
         border-bottom: 3px solid rgb(153, 153, 153);
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
-        box-shadow: 5px 0px 5px 5px rgb(189, 189, 189);
     }
     .currentlySearched{
         box-shadow: 0px 9px 10px -3px rgb(204, 204, 204), -9px 0px 10px -3px rgb(204, 204, 204),  inset 0px 4px 3px -2px rgb(202, 202, 202)  ;
