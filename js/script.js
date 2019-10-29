@@ -1,3 +1,8 @@
+$('#deldel').on('click',function(){
+    localStorage.clear(true)
+    location.reload(true);
+
+})
 var model = {
     data:{
         currentCity: ''
@@ -190,7 +195,8 @@ var view = {
     searchForTheCity:async function(e){ //look for the searched city
         let cityData;
         if(e.target.id === 'clear'){
-            x.clearSearch();
+            console.log('!')
+            await x.clearSearch();
         } else if (e.target.classList.contains('searched')){ // if clicked on search History, just render from history
         //get the city dta and then render acordingly
             cityData = await x.getCityData(this.innerText);
