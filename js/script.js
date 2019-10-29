@@ -30,14 +30,13 @@ var model = {
         if (city.includes(' ')){
             city.replace(' ','+')
         }
-        try{
-            // grab data through api call, save data in local storage, and update current city
+        try{// grab data, save data, then update current city
             const apiKey ='9710213fc0f3cccc6f013963f9a76866';
-            let urlCity = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=${apiKey}`;
-            let fiveDay = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=${apiKey}`;
+            let urlCity = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=${apiKey}`;
+            let fiveDay = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=${apiKey}`;
             let cityData = await fetch(urlCity)
             cityData = await cityData.json(); //!!!!!!!!!!!!!!! this is the searched city data
-            let urlUV = `http://api.openweathermap.org/data/2.5/uvi/forecast?appid=${apiKey}&lat=${cityData.coord.lat}&lon=${cityData.coord.lon}&cnt=1`
+            let urlUV = `https://api.openweathermap.org/data/2.5/uvi/forecast?appid=${apiKey}&lat=${cityData.coord.lat}&lon=${cityData.coord.lon}&cnt=1`
             let uvData = await fetch(urlUV);
             uvData = await uvData.json();
             uvData = uvData[0] // !!!!!!!!!!!!! this is the uv index for the current city
@@ -45,14 +44,12 @@ var model = {
             fiveDayData = await fiveDayData.json()
             // below is the 5 day data
             fiveDayData = [[fiveDayData.list[0]], [fiveDayData.list[8]], [fiveDayData.list[16]], [fiveDayData.list[24]],[fiveDayData.list[32]]];
-            //update current city, update localStorage.searchHistory,
             await this.upddateCurrentCity(cityData),
             await this.updateLocalStorage(cityData,uvData,fiveDayData)
         }
         catch(err){
-            return (['Please Check The City Name Which Was Entered',false])
+            return (['404 Error - City Not Found - Please Check The City Name Which Was Entered',false])
         }
-       
     },
     upddateCurrentCity: async function(city){
         model.data.currentCity = city.name
@@ -67,17 +64,14 @@ var model = {
             dataFiveDay:fiveDayData,
         }
         if (!localStorage.searchHistory){ // create search history if non existant
-            // await this.history('set',[dataObj])
-            localStorage.searchHistory=JSON.stringify([dataObj])
+            await this.history('set',[dataObj])
         } else{ //else, just add and update it
-            let data = JSON.parse(localStorage.searchHistory);
-            data.unshift(dataObj)
-            localStorage.searchHistory=JSON.stringify(data)
+            await this.history('update',dataObj)
         }
     },
     get:async function(x){
         if ((x==='history') && (localStorage.searchHistory) ){
-            return await JSON.parse(localStorage.searchHistory)
+            return await this.history('get')
         }  else if (x === 'current'){
             return await model.data.currentCity
         } else {
@@ -97,15 +91,6 @@ var model = {
             let data = await this.call(city);
             return data
         }
-    //     let serchHistory = JSON.parse(localStorage.searchHistory);
-    //     for (city in serchHistory){
-    //         if (serchHistory[city].name.toLowerCase() === x.toLowerCase()){
-    //             console.log(serchHistory[city])
-    //         }else{
-    //             this.call(x)
-    //             setTimeout(()=>{model.updateSearchHistory('!')},1000);
-    //         }
-        // }
     },
     isInSearchHistory:async function(city){
         let history = await this.history('get')
@@ -115,15 +100,20 @@ var model = {
             }
         } // if name not in history, return false
     },
-    history:async function(x){
+    history:async function(x,obj){
         if (x==='get'){
             return await JSON.parse(localStorage.searchHistory)
         } else if (x==='delet'){
             await localStorage.clear()
-        } 
+        } else if (x === 'set'){
+            localStorage.searchHistory=JSON.stringify(obj)
+        } else if (x === 'update'){
+            let data = await JSON.parse(localStorage.searchHistory);
+            await data.unshift(obj)
+            localStorage.searchHistory= await JSON.stringify(data)
+        }
     },
 }
-
 var x = {
     init: async function(){
         await model.init()
@@ -140,21 +130,22 @@ var x = {
         return await model.findCityData(city);
     }
 };
-
 var view = {
     init:async function(){
+        this.tooltip = $('.err')
+        $(window).on('resize', this.adjust)
         this.cityInput =$('#cityInput');
         $('#inputButton').on('click',this.searchForTheCity);
-        $('.searchHistory').on('click','button',this.searchForTheCity);
-        this.header = $('.header');
-        this.bar = $('.leftSection');
-        this.header.on('click',this.toggle);
         this.searchHistory = $('.searchHistory');
+        this.searchHistory.on('click','button',this.searchForTheCity);
         let historyList = await x.get('history')
         for (city in historyList){
             await this.renderHistory(historyList[city])
         }
         await this.renderDashboard(historyList[0]);
+        this.header = $('.header');
+        this.bar = $('.leftSection');
+        this.adjust(); //adjust the screen accordingly
     },
     renderHistory:async function(x){
         let temp = $('#tempSearchHistory').html();
@@ -186,6 +177,12 @@ var view = {
         temp = temp.replace('{{humid}}',x.main.humidity)
         $('.cardsFive').prepend(temp)
     },
+    renderError:async function(err){
+        console.log(404,err)
+        this.tooltip.animate({'opacity':1})
+        setTimeout(()=>{view.tooltip.animate({'opacity':0})},2000)
+
+    },
     searchForTheCity:async function(e){ //look for the searched city
         let cityData;
         if (e.target.classList.contains('searched')){ // if clicked on search History, just render from history
@@ -197,67 +194,35 @@ var view = {
         }else{ // if input from search bar, and if its not empty, and if its not already loaded:
             e.preventDefault()
             if (view.cityInput.val() && (view.cityInput.val().trim() !== '' ) && (view.cityInput.val().toLowerCase() !== $('#city').text().toLowerCase()) ){
-                debugger
-                cityData = await x.getCityData(view.cityInput.val());
+                cityData = await x.getCityData(view.cityInput.val().trim());
+            } else{
+                e.preventDefault()
+                return
             }
-        }
-        
-        
+        } 
         if (cityData === undefined){
-            await view.renderDashboard( await x.getCityData(x.get('current')) )
+            cityData = await x.get('current')
+            cityData = await x.getCityData(cityData)
+            await view.renderDashboard( await cityData[0])
+            await view.renderHistory( await cityData[0])
+            await view.toggle();
         } else if (cityData[1] === true){
             await view.renderDashboard( await cityData[0])
+            await view.toggle();
+        } else if (cityData[1]===false){
+            view.renderError(cityData[0])
         }
-
-    }
+    },
+    adjust:async function(){
+        if ( $(window).width() < 380){
+            view.bar.animate({'top': -(view.bar.height()+15) })
+            view.header.click(view.toggle);
+        }else{
+            view.header.unbind('click',view.toggle);
+        }
+    },
+    toggle:async function(h){
+        view.bar.offset().top === 100 ? view.bar.animate({'top': -(view.bar.height()+15) }) : view.bar.animate({'top': -view.bar.height()+view.bar.height() });
+    },
 }
-
-
-        
-
-        
-        
-    //         //get the city dta and then render acordingly
-    
-    //         console.log(cityData)
-    //     }else{
-    //         e.preventDefault()
-    //         return;
-    //     }   
-    // }
-    // if(cityData===false){
-    //     console.log('SHHHHEEIIIT')
-    // }else if (cityData === undefined) {
-    //     // view.renderDashboard()
-    // }
-    // }
-    
-    //             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //         if (cityData[0].name.toLowerCase() === $('#city').text().toLowerCase()){
-    //             return
-    //         }
-    //         if (cityData[1] === true){
-    //             await view.renderDashboard(cityData[0]);
-    //             return;
-    //         }
-    //         // $('.searchHistory').html('')
-    //         let historyList = await x.get('history')
-    //         for (city in historyList){
-    //             await view.renderHistory(historyList[city])
-    //         }
-    //     toggle:function(){
-    //         if (window.innerWidth <= 377){
-    //             view.bar.offset().top === 100 ? $('.leftSection').animate({'top': '-'+$('.leftSection').height()}) : $('.leftSection').animate({'top':'0px'})
-    //         }
-    //     },
-    
-
-
-
-
-
-
-
-
-
 x.init();

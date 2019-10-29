@@ -2,6 +2,37 @@
     font-family: sans-serif;
 }
 
+img{
+    filter:invert(0.10)
+}
+
+.err{
+    opacity: 0;
+}
+
+.err:before{
+    position: absolute;
+    content: attr(data-errMsg);
+    background: rgb(255, 68, 68);
+    color: black;
+    padding: 10px;
+    margin-left: 20px; 
+    border-radius: 5px;
+}
+
+
+.err:after{
+    position: absolute;
+    content: '';
+    top:102px;
+    width: 0; 
+    height: 0; 
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent; 
+    border-right:20px solid  rgb(255, 68, 68); 
+}
+
+
 .container{
     width: 100vw;
     height: 100vh;
@@ -30,6 +61,7 @@ main{
     padding: 5px 10px;
     min-width: 300px;
     background-color: #e0e0e0;
+    border-right: 3px solid rgb(206, 206, 206);
 }
 form>div{
     display: flex;
@@ -52,6 +84,7 @@ form>div{
     border-radius: 0px 5px 5px 0px;
     cursor: pointer;
 }
+
 
 
 .searchHistory{
@@ -172,7 +205,7 @@ form>div{
 
 
 
-@media only screen and (max-width: 377px) {
+@media only screen and (max-width: 380px) {
 
     .container{
         height: 100%;
@@ -180,6 +213,11 @@ form>div{
 
     main{
         position: relative;
+    }
+    .searchHistory{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0px 0px 5px 5px rgb(204, 204, 204);
     }
     .header{
         z-index: 2;
@@ -199,7 +237,32 @@ form>div{
         position: absolute;
         width: 100%;
         z-index: 1;
-        top: -190px;
+        top: 0px;
+        border-bottom: 5px solid rgb(107, 107, 107);
+        border-left: 5px solid rgb(107, 107, 107);
+        border-right: 5px solid rgb(107, 107, 107);
+        padding
+    }
+    .err:after{
+        position: absolute;
+        content: '';
+        top:40px;
+        right: 165px;
+        width: 0; 
+        height: 0; 
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent; 
+        border-right:20px solid  rgb(255, 68, 68); 
+    }
+    img{
+        transform: scale(1.5);
+        margin-left: 20px;
+    }
+    #city{
+        font-size: 50px;
+    }
+    #date{
+        font-size: 30px;
     }
     
 }
