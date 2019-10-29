@@ -1,3 +1,8 @@
+$('#clicky').on('click',function(e){
+    e.preventDefault();
+    $('#x').text('W: '+$(window).width()+' H: '+$(window).height())
+})
+
 var model = {
     data:{
         currentCity: ''
@@ -139,7 +144,7 @@ var view = {
         // $('#clear').on('click',function(){ })
         this.tooltip = $('.err')
         this.width = $(window).width()
-        $(window).on('resize', function(){ if ( this.width != $(this).width() ) { this.width = $(window).width() ; view.adjust } }  )
+        $(window).on('resize', function(){ if ( this.width != $(window).width() ) { this.width = $(window).width() ; view.adjust } }  )
         this.cityInput =$('#cityInput');
         $('#inputButton').on('click',this.searchForTheCity);
         this.searchHistory = $('.searchHistory');
