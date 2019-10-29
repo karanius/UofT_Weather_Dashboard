@@ -3,8 +3,7 @@
 } 
 
 body{
-    /* ! */
-    /* height: 100vh; */
+    height: 100vh;
     widows: 100vw;
 }
 img{
@@ -276,13 +275,13 @@ form>div{
         font-size: 30px;
     }
 
-    .darkner{
+    /* .darkner{
         position: absolute;
         width: 100vw;
         height: 100vh;
         background: black;
         z-index: 1;
-    }
+    } */
     #abc{
         width: 200px;
     }

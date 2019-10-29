@@ -223,15 +223,15 @@ var view = {
         }
     },
     adjust:async function(){
-        if ( $(window).width() < 500){
+        if ( $(window).width() <= 500){
             view.bar.animate({'top': -(view.bar.height()+15) })
             $('.darkner').css({'opacity':0});
             $('.darkner').css({'height' : $(window).height() + 200 +'px'})
-            // $(window).on('click', function(e){
-            //     if( (e.originalEvent.clientY > (view.bar.offset().top + view.bar.height() + 25)) && (view.bar.offset().top === 100) ){
-            //         view.toggle()
-            //     }
-            // })
+            $(window).on('click', function(e){
+                if( (e.originalEvent.clientY > (view.bar.offset().top + view.bar.height() + 25)) && (view.bar.offset().top === 100) ){
+                    view.toggle()
+                }
+            })
             view.header.click(view.toggle);
         }else{
             view.header.unbind('click',view.toggle)
