@@ -244,4 +244,4 @@ var view = {
         view.bar.offset().top === 100 ? $('.darkner').animate({'opacity':0}) : $('.darkner').animate({'opacity':0.70})
     },
 }
-x.init();
+x.init()
