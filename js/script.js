@@ -105,6 +105,7 @@ var model = {
             return await JSON.parse(localStorage.searchHistory)
         } else if (x==='delete'){
             await localStorage.clear()
+            location.reload()
         } else if (x === 'set'){
             localStorage.searchHistory=JSON.stringify(obj)
         } else if (x === 'update'){
@@ -133,7 +134,6 @@ var x = {
         await model.history('delete')
     }
 };
-// location.reload()
 var view = {
     init:async function(){
         // $('#clear').on('click',function(){ })
@@ -190,8 +190,7 @@ var view = {
     searchForTheCity:async function(e){ //look for the searched city
         let cityData;
         if(e.target.id === 'clear'){
-            await x.clearSearch();
-            location.reload()
+            x.clearSearch();
         } else if (e.target.classList.contains('searched')){ // if clicked on search History, just render from history
         //get the city dta and then render acordingly
             cityData = await x.getCityData(this.innerText);
