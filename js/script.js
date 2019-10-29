@@ -1,3 +1,8 @@
+$('#click').on('click',function(e){
+    e.preventDefault()
+    $('#put').html($(window).width())
+})
+
 var model = {
     data:{
         currentCity: ''
