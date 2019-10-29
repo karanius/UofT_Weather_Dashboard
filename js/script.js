@@ -143,7 +143,8 @@ var view = {
     init:async function(){
         // $('#clear').on('click',function(){ })
         this.tooltip = $('.err')
-        $(window).on('resize', this.adjust)
+        this.width = $(window).width()
+        $(window).on('resize', function(){ if ( this.width != $(this).width() ) { this.width = $(window).width() ; view.adjust } }  )
         this.cityInput =$('#cityInput');
         $('#inputButton').on('click',this.searchForTheCity);
         this.searchHistory = $('.searchHistory');
