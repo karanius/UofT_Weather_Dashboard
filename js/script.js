@@ -1,8 +1,8 @@
-$('#deldel').on('click',function(){
-    localStorage.clear(true)
-    location.reload(true);
+// $('#deldel').on('click',function(){
+//     localStorage.clear(true)
+//     location.reload(true);
 
-})
+// })
 var model = {
     data:{
         currentCity: ''
