@@ -1,11 +1,11 @@
-$('#clicky').on('click',function(e){
-    e.preventDefault();
-    $('#x').text('W: '+$(window).width()+' H: '+$(window).height()+' Browser: '+ JSON.stringify($.browser) )
-})
-$(window).on('click',function(e){
-    $(e.target).css({'filter':'invert('+ 1 +')'})
-    setTimeout( ()=>{$(e.target).css({'filter':'invert('+ 0+')'}) },600)
-})
+// $('#clicky').on('click',function(e){
+//     e.preventDefault();
+//     $('#x').text('W: '+$(window).width()+' H: '+$(window).height()+' Browser: '+ JSON.stringify($.browser) )
+// })
+// $(window).on('click',function(e){
+//     $(e.target).css({'filter':'invert('+ 1 +')'})
+//     setTimeout( ()=>{$(e.target).css({'filter':'invert('+ 0+')'}) },600)
+// })
 
 var model = {
     data:{
