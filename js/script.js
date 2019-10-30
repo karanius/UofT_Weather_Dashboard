@@ -241,7 +241,7 @@ var view = {
             //         view.toggle()
             //     }
             // })
-            view.header.click(view.toggle);
+            view.header.on('click touchstart' , view.toggle);
         }else{
             // view.header.unbind('click',view.toggle)
             console.log('!')
