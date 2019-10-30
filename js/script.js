@@ -241,7 +241,7 @@ var view = {
             //         view.toggle()
             //     }
             // })
-            view.header.on('mousedown touchstart' , view.toggle);
+            view.header[0].addEventListener('click', view.toggle)
         }else{
             // view.header.unbind('click',view.toggle)
             console.log('!')
