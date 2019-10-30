@@ -241,7 +241,7 @@ var view = {
             //         view.toggle()
             //     }
             // })
-            view.header.on('click touchstart' , view.toggle);
+            view.header.on('mousedown touchstart' , view.toggle);
         }else{
             // view.header.unbind('click',view.toggle)
             console.log('!')
@@ -252,4 +252,5 @@ var view = {
         // view.bar.offset().top === 100 ? $('.darkner').animate({'opacity':0}) : $('.darkner').animate({'opacity':0.70})
     },
 }
-x.init()
+
+$(document).ready(x.init())
