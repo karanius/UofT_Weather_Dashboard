@@ -3,10 +3,10 @@
 //     document.getElementById('x').innerText = 'W: '+ window.innerWidth +' H: '+window.innerHeight
 // })
 
-window.addEventListener('click',function(e){
-    e.target.style.filter = 'invert(1)'
-    setTimeout( ()=>{e.target.style.filter = 'invert(0)'},300)
-})
+// window.addEventListener('click',function(e){
+//    e.target.style.filter = 'invert(1)'
+//    setTimeout( ()=>{e.target.style.filter = 'invert(0)'},300)
+// })
 
 var model = {
     data:{
