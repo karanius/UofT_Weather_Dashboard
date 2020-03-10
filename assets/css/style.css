@@ -1,0 +1,170 @@
+html{
+  min-height:100%;
+}
+
+html,body{
+  height:100%;
+  color:#212529;
+}
+
+body{
+  font-family: 'Roboto', sans-serif;
+}
+
+header{
+  min-height: 70px;
+  display: flex;
+  width: 100%;
+  background:#343a40;
+}
+
+h1 {
+  color:white;
+  width: 100%;
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content: center;
+}
+
+#currentDay{
+  margin:20px;
+  padding:20px;
+  border-radius:3px;
+  border: 1px solid #dfdfdf;
+}
+
+.blockHeading{
+  display:flex;
+  align-items:center;
+}
+
+.uv span{
+  background-color:#dc3545;
+  border-radius: 5px;
+  padding:5px;
+  color:white;
+}
+
+
+
+#forcast .days div{
+  padding:5px;
+  background-color:#007bff;
+  color:white;
+  border-radius:10px;
+  margin:5px;
+  text-align:center;
+}
+
+#cities{
+  background-color:#f8f9fa;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+#cities h3{
+  margin:0 0 0 5px;
+  padding: 10px 0;
+}
+
+#search{
+  display:flex;
+  margin-left:5px;
+}
+
+#search input{
+  border: 1px solid #dfdfdf;
+  margin:0;
+  padding:0;
+  border-radius:5px;
+  width: 60%;
+}
+
+#search button{
+  background-color:#007bff;
+  cursor:pointer;
+  position:relative;
+  height: 40px;
+  width: 40px;
+  border-radius:5px;
+  border: 0px solid transparent;
+}
+
+#search button img{
+  position:absolute;
+  width:50%;
+  height:50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#presetCities{
+  box-sizing: border-box;
+  display:flex;
+  flex-direction:column;
+  margin: 20px 5px 20px 5px;
+  background-color:white;
+  border: 1px solid #dfdfdf;
+  border-radius:5px;
+}
+
+#presetCities button{
+  border: 1px solid #dfdfdf;
+  padding: 20px;
+  cursor: pointer;
+  background-color: white;
+}
+
+#searchError{
+  height:18px;
+  margin-left:5px;
+  color:red;
+}
+
+#presetCities button.wait, #search button.wait{
+  cursor: progress;
+}
+
+
+@media only screen and (min-width: 768px) {
+  #container{
+    display: flex;
+    align-items: stretch;
+    min-height: calc( 100% - 70px);
+  }
+
+  #forcast h2, #forcast .days{
+    padding: 0 20px;
+  }
+
+  #forcast .days{
+    display:flex;
+    justify-content: space-between;
+  }
+
+  #forcast .days div{
+    width:calc(20% - 20px);
+  }
+
+  #cities{
+    min-width:25%;
+  }
+
+  #weather{
+    min-width:75%;
+  }
+
+  #currentDay, #forcast{
+    min-height:40%;
+  }
+}
+
+
+@media only screen and (min-width: 1120px) {
+  
+  #forcast .days div{
+    width:calc(20% - 40px);
+  }
+}
