@@ -119,9 +119,10 @@ so that I can plan a trip accordingly
 
 1. HTML
 2. CSS
-3. jQuery
-4. JavaScript
-5. API
+3. AJAX
+4. jQuery
+5. JavaScript
+6. API
 
 ## Licence
 
