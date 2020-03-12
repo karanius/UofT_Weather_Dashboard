@@ -27,7 +27,7 @@ Weather dashboard application with search functionality to find current weather 
 ## Table of Contents
 
 - [weather-dashboard](#weather-dashboard)
-- [[LIVE LINK] (https://karanius.github.io/weatherDashboard/)](#live-link-httpskaraniusgithubioweatherdashboard)
+- [LIVE LINK](#live-link)
   - [Table of Contents](#table-of-contents)
   - [About The Project](#about-the-project)
   - [User Stories](#user-stories)
