@@ -22,7 +22,7 @@ I really like the responsive side of this project where I tried to create the cu
 # weather-dashboard
 Weather dashboard application with search functionality to find current weather conditions and the future weather outlook for multiple cities.
 
-# [LIVE LINK](https://karanius.github.io/weatherDashboard/)
+# [LIVE LINK](https://karanius.github.io/UofT_Weather_Dashboard/)
 
 ## Table of Contents
 
